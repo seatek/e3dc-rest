@@ -1,0 +1,41 @@
+buildscript {
+		dependencies {
+				classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+		}
+
+	repositories {
+		jcenter()
+	}
+}
+
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+		jcenter()
+}
+
+
+dependencies {
+		compile("org.springframework.boot:spring-boot-starter-web")
+		compile("org.springframework.boot:spring-boot-starter-actuator")
+
+compileOnly 'org.projectlombok:lombok:1.18.2'
+
+	apt "org.projectlombok:lombok:1.18.2"
+		//compile("org.springframework.boot:spring-boot-starter-data-rest")
+
+compile group: 'com.ghgande', name: 'j2mod', version: '2.5.0'
+		testCompile 'junit:junit'
+}
