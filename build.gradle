@@ -30,6 +30,7 @@ repositories {
 dependencies {
 		compile("org.springframework.boot:spring-boot-starter-web")
 		compile("org.springframework.boot:spring-boot-starter-actuator")
+compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 
 compileOnly 'org.projectlombok:lombok:1.18.2'
 
