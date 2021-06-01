@@ -12,6 +12,8 @@ import com.ghgande.j2mod.modbus.facade.AbstractModbusMaster;
 import com.ghgande.j2mod.modbus.facade.ModbusTCPMaster;
 import com.ghgande.j2mod.modbus.procimg.Register;
 
+import seatek.e3dc.rest.Measurement.Field;
+
 @Component
 public class ModbusRepository {
 	AbstractModbusMaster master;
@@ -82,5 +84,13 @@ public class ModbusRepository {
 		Measurement m = new Measurement();
 		BeanUtils.copyProperties(this, m);
 		return m;
+	}
+
+	public int getValue(Field powerConsumption) {
+		int possiblyNegative = readInt(powerConsumption.getModbusField(), 1);
+		int adjusted = possiblyNegative;
+		if(powerConsumption==Field.LINE_POWER)
+			adjusted = convertNegativeShort(possiblyNegative);
+		return adjusted;
 	}
 }

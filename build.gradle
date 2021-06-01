@@ -1,6 +1,8 @@
 buildscript {
 		dependencies {
-				classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.1.RELEASE")
+
+				classpath 'se.transmode.gradle:gradle-docker:1.2'
 		}
 
 	repositories {
@@ -15,9 +17,10 @@ plugins {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
-
+apply plugin: 'docker'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -32,11 +35,28 @@ dependencies {
 		compile("org.springframework.boot:spring-boot-starter-actuator")
 compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 
+compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.15.7'
+
 compileOnly 'org.projectlombok:lombok:1.18.2'
 
-	apt "org.projectlombok:lombok:1.18.2"
+	annotationProcessor "org.projectlombok:lombok:1.18.2"
 		//compile("org.springframework.boot:spring-boot-starter-data-rest")
 
 compile group: 'com.ghgande', name: 'j2mod', version: '2.5.0'
 		testCompile 'junit:junit'
 }
+
+docker {
+	baseImage 'adoptopenjdk:8-hotspot'
+	}
+
+	task buildDocker(type: Docker) {
+	dependsOn(bootJar)
+	applicationName = "e3dc2mqtt"
+	group = "docker"
+	registry = 'hp.munich:5000'
+		push true
+		addFile(jar.archivePath,'/srv/')
+		defaultCommand(['java','-jar','/srv/'+jar.archiveFileName.get(),'--spring.profiles.active=docker'])
+	}
+
